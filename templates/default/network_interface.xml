@@ -1,0 +1,6 @@
+<interface type='<%= @type %>'>
+  <source <%= @type %>='<%= @source %>'/>
+  <mac address='<%= @mac_address %>'/>
+  <model type='<%= @model %>'/>
+  <target dev='<%= @target %>'/>
+</interface>
