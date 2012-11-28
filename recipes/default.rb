@@ -1,7 +1,7 @@
 %w(libvirt-bin libvirt-dev).each do |name|
   package name do
-    action :install
-  end
+    action :nothing
+  end.run_action(:install)
 end
 
 chef_gem 'ruby-libvirt' do
