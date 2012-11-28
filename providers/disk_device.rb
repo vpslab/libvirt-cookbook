@@ -1,6 +1,6 @@
 def load_current_resource
   @current_resource = Chef::Resource::LibvirtDiskDevice.new(new_resource.name)
-  @libvirt = ::Libvirt.open('qemu:///system')
+  @libvirt = ::Libvirt.open(new_resource.uri)
   @current_resource
 end
 

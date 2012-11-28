@@ -2,7 +2,7 @@ require 'uuidtools'
 
 def load_current_resource
   @current_resource = Chef::Resource::LibvirtDomain.new(new_resource.name)
-  @libvirt = ::Libvirt.open('qemu:///system')
+  @libvirt = ::Libvirt.open(new_resource.uri)
   @domain  = load_domain rescue nil
   @current_resource
 end
