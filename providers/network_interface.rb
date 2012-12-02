@@ -22,7 +22,7 @@ action :attach do
     end
     t.run_action(:create)
 
-    domain.attach_device(::File.read(interface_xml.path))
+    domain.attach_device(::File.read(interface_xml.path)) rescue nil
     new_resource.updated_by_last_action(true)
   rescue Libvirt::RetrieveError
     raise "You have to define libvirt domain '#{new_resource.domain}' first"
