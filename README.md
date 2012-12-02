@@ -33,9 +33,8 @@ Usage
       subscribes :attach, resources(:libvirt_domain => 'fake_dummy'), :immediately
     end
 
-    libvirt_network_interface 'eth0' do
+    libvirt_network_interface '00:57:20:f8:94:cf' do
       source 'fakebr'
-      mac_address '00:57:20:f8:94:cf'
       domain 'fake_dummy'
 
       action :nothing

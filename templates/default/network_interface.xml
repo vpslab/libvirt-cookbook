@@ -2,5 +2,4 @@
   <source <%= @type %>='<%= @source %>'/>
   <mac address='<%= @mac_address %>'/>
   <model type='<%= @model %>'/>
-  <target dev='<%= @target %>'/>
 </interface>

@@ -15,7 +15,6 @@ action :attach do
         :type   => new_resource.type,
         :model  => new_resource.model,
         :source => new_resource.source,
-        :target => new_resource.target,
         :domain => new_resource.domain,
         :mac_address => new_resource.mac_address
       )
