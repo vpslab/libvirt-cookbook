@@ -1,0 +1,28 @@
+<domain type='lxc'>
+  <name><%= @name %></name>
+  <currentMemory><%= @memory %></currentMemory>
+  <memory><%= @memory %></memory>
+  <vcpu><%= @vcpu %></vcpu>
+  <uuid><%= @uuid %></uuid>
+  <os>
+    <type>exe</type>
+    <init>/sbin/init</init>
+  </os>
+  <clock offset="utc"/>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>restart</on_crash>
+  <devices>
+    <emulator>/usr/lib/libvirt/libvirt_lxc</emulator>
+    <% @filesystems.each do |filesystem| %>
+      <filesystem type='mount'>
+        <source dir='<%= filesystem['source'] %>' />
+        <target dir='<%= filesystem['target'] %>' />
+      </filesystem>
+    <% end %>
+    <interface type='network'>
+      <source network='<%= @network %>' />
+    </interface>
+    <console type='pty' />
+  </devices>
+</domain>
