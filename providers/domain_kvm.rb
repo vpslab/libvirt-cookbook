@@ -2,13 +2,12 @@ require 'uuidtools'
 
 def load_current_resource
   @current_resource = Chef::Resource::LibvirtDomain.new(new_resource.name)
-  @libvirt = ::Libvirt.open(new_resource.uri)
-  @domain  = load_domain rescue nil
+  @hypervisor = Vpslab::Libvirt::Hypervisor.new(new_resource.uri)
   @current_resource
 end
 
 action :define do
-  unless domain_defined?
+  unless @hypervisor.domain_defined?(domain_name)
     memory_in_bytes = to_bytes(new_resource.memory)
     libvirt_arch    = to_arch(new_resource.arch)
 
@@ -17,7 +16,7 @@ action :define do
       cookbook "libvirt"
       source   "kvm_domain.xml"
       variables(
-        :name   => new_resource.name,
+        :name   => domain_name,
         :memory => memory_in_bytes,
         :vcpu   => new_resource.vcpu,
         :arch   => libvirt_arch,
@@ -27,26 +26,25 @@ action :define do
     end
     t.run_action(:create)
 
-    @libvirt.define_domain_xml(::File.read(domain_xml.path))
-    @domain = load_domain
+    @hypervisor.define_domain(::File.read(domain_xml.path))
     new_resource.updated_by_last_action(true)
   end
 end
 
 action :autostart do
-  require_defined_domain
-  unless domain_autostart?
-    @domain.autostart = true
+  if @hypervisor.autostart_domain(domain_name)
     new_resource.updated_by_last_action(true)
   end
 end
 
 action :create do
-  require_defined_domain
-  unless domain_active?
-    @domain.create
+  if @hypervisor.create_domain(domain_name)
     new_resource.updated_by_last_action(true)
   end
+end
+
+def domain_name
+  new_resource.name
 end
 
 private
@@ -67,25 +65,4 @@ def to_bytes(value)
   else
     value.to_i
   end
-end
-
-def load_domain
-  @libvirt.lookup_domain_by_name(new_resource.name)
-end
-
-def require_defined_domain
-  error = RuntimeError.new "You have to define libvirt domain '#{new_resource.name}' first"
-  raise error unless domain_defined?
-end
-
-def domain_defined?
-  @domain
-end
-
-def domain_autostart?
-  @domain.autostart?
-end
-
-def domain_active?
-  @domain.active?
 end
