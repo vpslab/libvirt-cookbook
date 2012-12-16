@@ -8,18 +8,15 @@ end
 
 action :define do
   unless @hypervisor.domain_defined?(domain_name)
-    memory_in_bytes = to_bytes(new_resource.memory)
-    libvirt_arch    = to_arch(new_resource.arch)
-
     domain_xml = Tempfile.new(new_resource.name)
     t = template domain_xml.path do
       cookbook "libvirt"
       source   "kvm_domain.xml"
       variables(
         :name   => domain_name,
-        :memory => memory_in_bytes,
         :vcpu   => new_resource.vcpu,
-        :arch   => libvirt_arch,
+        :memory => Vpslab::Libvirt::Helpers.to_bytes(new_resource.memory),
+        :arch   => Vpslab::Libvirt::Helpers.to_arch(new_resource.arch),
         :uuid   => ::UUIDTools::UUID.random_create
       )
       action :nothing
@@ -45,24 +42,4 @@ end
 
 def domain_name
   new_resource.name
-end
-
-private
-
-def to_arch(arch)
-  case arch
-  when /64/
-    "x86_64"
-  end
-end
-
-def to_bytes(value)
-  case value
-  when /M$/
-    value.to_i * 1024
-  when /G$/
-    value.to_i * 1024**2
-  else
-    value.to_i
-  end
 end
