@@ -19,6 +19,7 @@ action :define do
         :netmask => new_resource.netmask,
         :gateway => new_resource.gateway,
         :forward => new_resource.forward,
+        :domain  => new_resource.domain,
         :dhcp    => new_resource.dhcp_range,
         :uuid    => ::UUIDTools::UUID.random_create
       )

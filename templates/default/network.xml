@@ -5,6 +5,9 @@
 <% if @forward %>
   <forward mode="<%= @forward %>"/>
 <%end %>
+<% if @domain %>
+  <domain name="<%= @domain %>"/>
+<%end %>
   <ip address="<%= @gateway %>" netmask="<%= @netmask %>">
 <% if @dhcp %>
     <dhcp>
