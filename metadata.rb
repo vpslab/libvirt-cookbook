@@ -1,3 +1,4 @@
+name             "libvirt"
 maintainer       "VPSLab"
 maintainer_email "pawel.pacana@gmail.com"
 license          "Apache 2.0"
